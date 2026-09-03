@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#090c0f" />
+    <link rel="icon" href="data:," />
+    <title>异构无人协同指控系统</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <div class="brand-mark" aria-hidden="true"><b>C2</b></div>
+          <div>
+            <h1>异构无人协同指控系统</h1>
+            <p>HET-C2 / 实时仿真终端</p>
+          </div>
+        </div>
+        <div class="top-controls">
+          <label class="select-wrap">
+            <span class="sr-only">场景</span>
+            <select id="scenarioSelect">
+              <option value="border">边境巡检</option>
+              <option value="rescue">人员搜救</option>
+              <option value="area">区域封控</option>
+            </select>
+          </label>
+          <span class="run-id">任务 07 · SEED 42</span>
+          <span class="connection" id="connectionStatus"><i></i><span>等待仿真服务</span></span>
+          <span class="clock" id="simClock">T+00:10:20 / 02:00:00</span>
+          <button class="btn btn-run" id="runToggle"><span class="btn-icon">▶</span><span>运行</span></button>
+          <button class="btn btn-quiet" id="speedToggle" title="切换仿真速度">× 1.0</button>
+          <button class="btn btn-quiet" id="stepButton" title="暂停时快进一个完整仿真周期，默认推进 1 秒"><span class="btn-icon">›</span> 快进</button>
+          <button class="btn btn-danger" id="resetButton" title="结束并清空当前场景的仿真进度">结束 / 重置</button>
+          <span class="latency">延迟 <strong id="latencyValue">11</strong> ms</span>
+          <span class="connection" id="streamStatus"><i></i><span>本地推进流</span></span>
+          <button class="icon-button" id="settingsButton" title="设置" aria-label="设置">⚙</button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="left-rail">
+          <section class="rail-section summary-section">
+            <div class="section-heading"><h2 data-code="SITREP">态势摘要</h2><span>实时 · 10 秒</span></div>
+            <div class="summary-metric">
+              <div class="metric-label"><span id="coverageLabel">边境线覆盖率</span></div>
+              <div class="metric-value cyan-text" id="coverageValue">78.4%</div>
+              <div class="progress"><span id="coverageBar" style="width: 78.4%"></span></div>
+            </div>
+            <div class="summary-row">
+              <div><span class="metric-label" id="handledLabel">异常处置</span><strong class="amber-text" id="handledValue">02 / 04</strong></div>
+              <em>目标已发现</em>
+            </div>
+            <div class="summary-row split">
+              <div><strong class="red-text" id="alertCount">01</strong><span>高优先级告警</span></div>
+              <div><strong class="green-text" id="onlineCount">06</strong><span>在线平台</span></div>
+            </div>
+          </section>
+
+          <section class="rail-section evaluation-section">
+            <div class="section-heading"><h2 data-code="EVAL">任务评价</h2><span id="evaluationScore">得分 --</span></div>
+            <div class="evaluation-goal" id="evaluationGoal">等待评价数据</div>
+            <div class="evaluation-metrics" id="evaluationMetrics"></div>
+          </section>
+
+          <section class="rail-section kpi-section">
+            <div class="section-heading"><h2 data-code="KPI">关键指标</h2><span>实时数据</span></div>
+            <div class="kpi-grid">
+              <div><span>任务完成率</span><strong class="cyan-text" id="completionValue">54%</strong></div>
+              <div><span>平台利用率</span><strong class="green-text" id="utilizationValue">71%</strong></div>
+              <div><span>平均电量</span><strong class="amber-text" id="responseValue">--</strong></div>
+              <div><span>决策调整</span><strong class="red-text" id="replanValue">00</strong></div>
+            </div>
+            <div class="operator-id">操作员：指挥席 01</div>
+          </section>
+
+          <section class="rail-section alerts-section">
+            <div class="section-heading"><h2 data-code="ALERT">告警队列</h2><span id="alertActiveLabel">0 条告警</span></div>
+            <div class="alert-list" id="alertList"></div>
+          </section>
+
+          <section class="rail-section tasks-section">
+            <div class="section-heading"><h2 data-code="TASK">任务队列</h2><span>等待 / 执行中</span></div>
+            <div class="task-list" id="taskList"></div>
+            <div class="task-actions">
+              <button class="link-button" id="openTaskModal"><span>＋</span> 注入人工任务</button>
+              <button class="text-button" id="clearSelection">清除选择</button>
+            </div>
+          </section>
+        </aside>
+
+        <section class="map-panel">
+          <div class="panel-title-row">
+            <div>
+              <h2 data-code="TACTICAL PICTURE">实时态势地图</h2>
+              <p>GRID 0,0 SW · UNIT m · VIEW 全域</p>
+            </div>
+            <div class="map-controls">
+              <div class="segmented" role="group" aria-label="态势图层">
+                <button class="segment active" data-layer="coverage">覆盖图</button>
+                <button class="segment" data-layer="priority">优先级图</button>
+                <button class="segment" data-layer="passability">通行图</button>
+              </div>
+              <div class="zoom-controls" role="group" aria-label="地图缩放">
+                <button class="icon-button" id="zoomOut" title="缩小地图" aria-label="缩小地图">−</button>
+                <output id="zoomValue" aria-live="polite">100%</output>
+                <button class="icon-button" id="zoomIn" title="放大地图" aria-label="放大地图">＋</button>
+              </div>
+              <button class="icon-button" id="fitMap" title="回到全域" aria-label="回到全域">⌖</button>
+            </div>
+          </div>
+          <div class="map-stage" id="mapStage">
+            <canvas id="tacticalMap" aria-label="战术态势地图"></canvas>
+            <div class="map-toast" id="mapToast" role="status"></div>
+          </div>
+          <section class="unit-selector" aria-labelledby="unitSelectorTitle">
+            <div class="unit-selector-heading">
+              <div><h3 id="unitSelectorTitle" data-code="ASSET">单位选择</h3><span>点选单位查看详情 · 目标和告警可在地图或左侧队列中选择</span></div>
+              <div class="unit-selector-actions">
+                <strong id="unitCount">0 个平台</strong>
+                <button class="icon-button" id="unitPrev" title="查看上一组单位" aria-label="查看上一组单位">‹</button>
+                <button class="icon-button" id="unitNext" title="查看下一组单位" aria-label="查看下一组单位">›</button>
+              </div>
+            </div>
+            <div class="unit-selector-list" id="unitSelector" aria-label="可选无人平台"></div>
+          </section>
+        </section>
+
+        <aside class="right-inspector">
+          <section class="process-panel">
+            <div class="section-heading"><h2 data-code="SIM FLOW">仿真流程</h2><span id="processStatus">本地演示</span></div>
+            <div class="process-meta"><span>步数 <strong id="tickValue">0000</strong></span><span>步长 <strong id="dtValue">1.0 秒</strong></span><span>阶段 <strong id="phaseValue">等待</strong></span></div>
+            <div class="process-steps" id="processSteps"></div>
+            <div class="process-log" id="processLog" aria-live="polite"></div>
+          </section>
+          <div class="section-heading"><h2 data-code="DETAIL">对象详情</h2><span>已选择</span></div>
+          <div id="inspectorContent" class="inspector-content"></div>
+          <div class="command-dock">
+            <span class="command-prompt">CMD</span>
+            <input id="commandInput" placeholder="输入指令，例如：派一架无人机去东南角核查" aria-label="自然语言指令" />
+            <button id="commandSend" class="command-send" title="下达指令" aria-label="下达指令">下达</button>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="bottom-strip">
+        <section class="timeline-section">
+          <div class="section-heading timeline-heading"><h2 data-code="EVENT LOG">决策时间线</h2><div class="timeline-heading-tools"><span id="timelineRangeLabel">10 分钟内 · 0 条事件</span><div class="timeline-range" role="group" aria-label="时间线范围"><button type="button" data-timeline-range="full">全程</button><button type="button" data-timeline-range="hour">1 小时内</button><button type="button" data-timeline-range="ten" class="active">10 分钟内</button></div></div></div>
+          <div class="timeline-viewport"><div class="timeline" id="timeline"></div></div>
+          <div class="timeline-detail" id="timelineDetail" aria-live="polite"></div>
+        </section>
+        <section class="map-display-section">
+          <div class="section-heading"><h2 data-code="MAP KEY">地图显示</h2><span id="mapStatus">图层：覆盖新鲜度</span></div>
+          <div class="map-display-toggles" role="group" aria-label="地图标注显示">
+            <button class="overlay-chip active" data-overlay="routes"><span class="legend-line blue-line"></span>路径</button>
+            <button class="overlay-chip active" data-overlay="targets"><span class="legend-dot red-dot"></span>目标轨迹</button>
+            <button class="overlay-chip active" data-overlay="cues"><span class="legend-dot amber-dot"></span>线索热源</button>
+          </div>
+          <div class="map-symbol-key" aria-label="地图图例">
+            <div><span class="legend-dot blue-dot"></span>己方平台</div>
+            <div><span class="legend-dot red-dot"></span>已发现目标</div>
+            <div><span class="legend-dot amber-dot"></span>线索热源</div>
+          </div>
+          <div class="map-scale-row" aria-label="地图比例尺"><span>0</span><i id="mapScaleBar"></i><span id="mapScaleLabel">1 km</span></div>
+          <p class="map-display-help">按住地图拖拽平移 · 使用 − / ＋ 缩放</p>
+        </section>
+      </footer>
+    </div>
+
+    <dialog id="taskDialog" class="task-dialog">
+      <form method="dialog" id="taskForm">
+          <div class="dialog-heading"><div><p class="eyebrow">人工干预</p><h2>注入人工任务</h2></div><button class="icon-button" value="cancel" title="关闭" aria-label="关闭">×</button></div>
+        <div class="form-grid">
+          <label>任务类型<select name="taskType"><option value="ArriveTask">到达指定点</option><option value="OccupyTask">区域驻留</option><option value="DiscoverTask">目标发现</option><option value="RescueTask">人员救援</option><option value="InterceptTask">目标拦截</option><option value="MedicalDeliveryTask">医疗投送</option></select></label>
+          <label>优先级（0 最高）<input name="priority" type="number" min="0" max="100" value="10" /></label>
+          <label class="wide">目标坐标（米）<input name="targetPos" value="8000,2000" placeholder="例如 8000,2000" /></label>
+          <label>所需能力<select name="capability"><option value="sensor">感知搜索</option><option value="effector">目标处置</option><option value="medical">医疗投送</option><option value="rescue">人员救援</option><option value="maintenance">设施维修</option></select></label>
+          <label>平台数量<input name="platforms" type="number" min="1" max="6" value="1" /></label>
+        </div>
+        <div class="dialog-hint">任务会在下一仿真步进入任务队列，并由调度器自动分配平台。</div>
+        <div class="dialog-actions"><button class="btn btn-quiet" value="cancel">取消</button><button class="btn btn-run" value="default">提交任务</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="resetDialog" class="task-dialog confirm-dialog">
+      <form method="dialog" id="resetForm">
+        <div class="dialog-heading">
+          <div><p class="eyebrow danger-text">结束当前仿真</p><h2>确认重置场景？</h2></div>
+          <button class="icon-button" value="cancel" title="关闭" aria-label="关闭">×</button>
+        </div>
+        <p class="confirm-message">这会停止并清空 <strong id="resetSceneName">当前场景</strong> 的全部仿真进度、任务和事件记录。其他场景不受影响。</p>
+        <div class="dialog-actions">
+          <button class="btn btn-quiet" value="cancel">取消</button>
+          <button class="btn btn-danger" id="resetConfirm" value="default">确认重置</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
