@@ -3,191 +3,378 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#090c0f" />
+    <meta name="theme-color" content="#071119" />
     <link rel="icon" href="data:," />
-    <title>异构无人协同指控系统</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>长空守望系统</title>
+    <link rel="stylesheet" href="styles.css?v=20261106.07" />
+    <link rel="stylesheet" href="navigation.css?v=20260909.08" />
+    <link rel="stylesheet" href="vendor/cesium/Widgets/widgets.css" />
+    <link rel="stylesheet" href="map-3d.css?v=20261109.04" />
+    <link rel="stylesheet" href="operations.css?v=20261109.08" />
   </head>
   <body>
+    <svg class="ops-icon-defs" aria-hidden="true" focusable="false"><defs>
+      <symbol id="icon-play" viewBox="0 0 24 24"><path d="m8 5 12 7-12 7Z" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="icon-pause" viewBox="0 0 24 24"><path d="M9 5v14m6-14v14" stroke-width="2.6"/></symbol>
+      <symbol id="icon-step" viewBox="0 0 24 24"><path d="m5 6 9 6-9 6Zm11 0v12"/></symbol>
+      <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="icon-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+      <symbol id="icon-settings" viewBox="0 0 24 24"><path d="M4 6h6m4 0h6M4 12h10m4 0h2M4 18h2m4 0h10M10 4v4m8 2v4M6 16v4"/></symbol>
+      <symbol id="icon-reset" viewBox="0 0 24 24"><path d="M4 9a8 8 0 1 1 1 8M4 4v5h5"/><rect x="10" y="9" width="5" height="5"/></symbol>
+      <symbol id="icon-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5Zm-9 9 9 5 9-5m-18 4 9 5 9-5"/></symbol>
+      <symbol id="icon-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.7"/></symbol>
+      <radialGradient id="icon-globe-water" cx="35%" cy="28%" r="78%">
+        <stop stop-color="#b5ccd9"/><stop offset=".55" stop-color="#69899e"/><stop offset="1" stop-color="#344f63"/>
+      </radialGradient>
+      <symbol id="icon-globe" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" fill="url(#icon-globe-water)" stroke="#a5bbc8" stroke-width=".9"/>
+        <path d="m4 7 3-2 3 .4 1.2 2-2 1.1-.4 2.3-2 .5-1.1 2.2-1.4-1.4-.8-2.6Zm4 6 2-.9 2.4 1.6.6 2.1-1.3 1.2-.7 2.7-1.8-2-.5-2.5Zm5-6 2.2-2 3.1.7 1.8 2.7-.5 2-2.4-.3-1.1 1.2-1.6-.9-.9 1.3-1.5-1.1.8-1.6Zm1.7 6.3 2.2-.4 1 1.8-1.7 3.4-1.2-.6-.7-2.2Z" fill="#c8d7df" stroke="none"/>
+      </symbol>
+      <symbol id="icon-top-view" viewBox="0 0 24 24"><path d="M12 3v8m-3-3 3 3 3-3M3 16l9-4 9 4-9 4-9-4Z"/></symbol>
+      <symbol id="icon-fit" viewBox="0 0 24 24"><path d="M4 9V4h5m6 0h5v5m0 6v5h-5m-6 0H4v-5"/><circle cx="12" cy="12" r="2"/></symbol>
+      <symbol id="icon-track" viewBox="0 0 24 24"><path d="M12 3v4m0 10v4M3 12h4m10 0h4"/><circle cx="12" cy="12" r="5"/></symbol>
+      <symbol id="icon-events" viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h10"/><path d="M3 6h.01m0 6h.01m0 6h.01" stroke-width="2.4"/></symbol>
+      <symbol id="icon-menu" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M9 5v14"/></symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="icon-save" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v4h16v-4"/></symbol>
+      <symbol id="icon-back" viewBox="0 0 24 24"><path d="M8 7H3V2m0 5a9 9 0 1 1 0 10"/></symbol>
+      <symbol id="icon-forward" viewBox="0 0 24 24"><path d="M16 7h5V2m0 5a9 9 0 1 0 0 10"/></symbol>
+      <symbol id="icon-alert" viewBox="0 0 24 24"><path d="M12 4 3 20h18Zm0 6v4m0 3h.01"/></symbol>
+    </defs></svg>
+    <a class="ops-skip-link" href="#mapTitle">跳到态势地图</a>
     <div class="app-shell">
-      <header class="topbar">
+      <header class="topbar ops-header">
         <div class="brand-block">
           <div class="brand-mark" aria-hidden="true"><b>C2</b></div>
-          <div>
-            <h1>异构无人协同指控系统</h1>
-            <p>HET-C2 / 实时仿真终端</p>
-          </div>
+          <h1>长空守望系统</h1>
         </div>
-        <div class="top-controls">
-          <label class="select-wrap">
-            <span class="sr-only">场景</span>
-            <select id="scenarioSelect">
-              <option value="border">边境巡检</option>
-              <option value="rescue">人员搜救</option>
-              <option value="area">区域封控</option>
-            </select>
-          </label>
-          <span class="run-id">任务 07 · SEED 42</span>
-          <span class="connection" id="connectionStatus"><i></i><span>等待仿真服务</span></span>
-          <span class="clock" id="simClock">T+00:10:20 / 02:00:00</span>
-          <button class="btn btn-run" id="runToggle"><span class="btn-icon">▶</span><span>运行</span></button>
-          <button class="btn btn-quiet" id="speedToggle" title="切换仿真速度">× 1.0</button>
-          <button class="btn btn-quiet" id="stepButton" title="暂停时快进一个完整仿真周期，默认推进 1 秒"><span class="btn-icon">›</span> 快进</button>
-          <button class="btn btn-danger" id="resetButton" title="结束并清空当前场景的仿真进度">结束 / 重置</button>
-          <span class="latency">延迟 <strong id="latencyValue">11</strong> ms</span>
-          <span class="connection" id="streamStatus"><i></i><span>本地推进流</span></span>
-          <button class="icon-button" id="settingsButton" title="设置" aria-label="设置">⚙</button>
+        <div class="ops-header-controls">
+          <div class="control-group scenario-control">
+            <label class="select-wrap">
+              <span class="sr-only">场景</span>
+              <select id="scenarioSelect">
+                <option value="border">边境巡检</option>
+                <option value="rescue" selected>人员搜救</option>
+                <option value="area">区域封控</option>
+              </select>
+            </label>
+            <span class="run-id" id="sessionModeLabel">任务模式</span>
+            <span class="run-id" id="unitScaleLabel" title="当前任务的实际平台数量倍率" hidden></span>
+          </div>
+          <div class="playback-tabs" role="tablist" aria-label="实时推演和演习回放">
+            <button type="button" id="liveModeTab" role="tab" class="active" aria-selected="true" aria-controls="replayLiveActions" tabindex="0">实时推演</button>
+            <button type="button" id="exerciseModeTab" role="tab" aria-selected="false" aria-controls="replayReviewActions" tabindex="-1">演习回放</button>
+          </div>
+          <div class="ops-run" role="group" aria-label="仿真控制">
+            <button type="button" class="ops-tool ops-play" id="runToggle" aria-label="运行" data-tip="运行"><svg class="ops-icon btn-icon" aria-hidden="true" focusable="false"><use href="#icon-play"/></svg></button>
+            <button type="button" class="ops-tool" id="stepButton" aria-label="快进一个仿真步" data-tip="快进一个仿真步"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-step"/></svg><span id="stepLabel">+1 秒</span></button>
+            <button type="button" class="ops-tool ops-speed" id="speedToggle" aria-label="切换仿真倍速" data-tip="切换仿真倍速">×1</button>
+          </div>
+          <div class="ops-header-spacer"></div>
+          <div class="ops-health">
+            <span class="connection" id="connectionStatus" role="status"><i aria-hidden="true"></i><span>正在连接仿真服务</span></span>
+            <span id="streamStatus" class="sr-only"><span>等待状态同步</span></span>
+            <span hidden><strong id="latencyValue">0</strong></span>
+            <span id="simClock">T+00:00:00 / 02:00:00</span>
+          </div>
+          <div class="ops-counters">
+            <button type="button" class="ops-counter" id="onlineShortcut" aria-controls="assetPanel"><span>在线</span><strong id="onlineCount">00</strong></button>
+            <button type="button" class="ops-counter" id="alertShortcut" aria-controls="alertPanel"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-alert"/></svg><span>高危告警</span><strong id="alertCount">00</strong></button>
+          </div>
+          <button type="button" class="ops-tool ops-inject" id="openTaskModal" aria-controls="manualPanel" aria-expanded="false"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-plus"/></svg><span>人工注入</span></button>
+          <div class="ops-quick-actions" role="group" aria-label="推演快捷操作">
+            <div id="replayLiveActions" role="tabpanel" aria-labelledby="liveModeTab">
+              <button type="button" class="ops-tool" id="replayExport" aria-label="保存回放" data-tip="保存回放" aria-haspopup="dialog"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-save"/></svg></button>
+            </div>
+            <button type="button" class="ops-tool" id="settingsButton" aria-label="调试工具" data-tip="调试工具" aria-haspopup="dialog"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-settings"/></svg></button>
+            <button type="button" class="ops-tool ops-reset" id="resetButton" aria-label="结束 / 重置" data-tip="结束 / 重置" aria-haspopup="dialog"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-reset"/></svg></button>
+          </div>
         </div>
       </header>
 
-      <main class="workspace">
-        <aside class="left-rail">
-          <section class="rail-section summary-section">
-            <div class="section-heading"><h2 data-code="SITREP">态势摘要</h2><span>实时 · 10 秒</span></div>
-            <div class="summary-metric">
-              <div class="metric-label"><span id="coverageLabel">边境线覆盖率</span></div>
-              <div class="metric-value cyan-text" id="coverageValue">78.4%</div>
-              <div class="progress"><span id="coverageBar" style="width: 78.4%"></span></div>
-            </div>
-            <div class="summary-row">
-              <div><span class="metric-label" id="handledLabel">异常处置</span><strong class="amber-text" id="handledValue">02 / 04</strong></div>
-              <em>目标已发现</em>
-            </div>
-            <div class="summary-row split">
-              <div><strong class="red-text" id="alertCount">01</strong><span>高优先级告警</span></div>
-              <div><strong class="green-text" id="onlineCount">06</strong><span>在线平台</span></div>
-            </div>
+      <main class="workspace ops-workspace" id="operationsWorkspace">
+        <aside class="ops-rail" id="operationsRail" aria-label="态势导航">
+          <div class="ops-rail-title"><h2>态势导航</h2><button type="button" class="icon-button ops-mobile-control" id="railClose" aria-label="收起态势导航">×</button></div>
+          <div class="ops-tabs" role="tablist" aria-label="态势导航类别">
+            <button type="button" id="assetTab" role="tab" aria-controls="assetPanel" aria-selected="true" data-ops-tab="asset">资产</button>
+            <button type="button" id="taskTab" role="tab" aria-controls="taskPanel" aria-selected="false" tabindex="-1" data-ops-tab="task">任务</button>
+            <button type="button" id="alertTab" role="tab" aria-controls="alertPanel" aria-selected="false" tabindex="-1" data-ops-tab="alert">告警</button>
+          </div>
+          <section id="assetPanel" class="ops-tab-panel" role="tabpanel" aria-labelledby="assetTab">
+            <div class="section-heading"><h2>平台列表</h2><span id="unitCount">0 个平台</span></div>
+            <label class="ops-filter">类型<select id="assetFilter"><option value="all">全部平台</option><option value="uav">无人机</option><option value="ugv">无人车</option></select></label>
+            <div class="unit-selector-list" id="unitSelector" aria-label="可选无人平台"></div>
           </section>
-
-          <section class="rail-section evaluation-section">
-            <div class="section-heading"><h2 data-code="EVAL">任务评价</h2><span id="evaluationScore">得分 --</span></div>
-            <div class="evaluation-goal" id="evaluationGoal">等待评价数据</div>
-            <div class="evaluation-metrics" id="evaluationMetrics"></div>
-          </section>
-
-          <section class="rail-section kpi-section">
-            <div class="section-heading"><h2 data-code="KPI">关键指标</h2><span>实时数据</span></div>
-            <div class="kpi-grid">
-              <div><span>任务完成率</span><strong class="cyan-text" id="completionValue">54%</strong></div>
-              <div><span>平台利用率</span><strong class="green-text" id="utilizationValue">71%</strong></div>
-              <div><span>平均电量</span><strong class="amber-text" id="responseValue">--</strong></div>
-              <div><span>决策调整</span><strong class="red-text" id="replanValue">00</strong></div>
+          <section class="ops-tab-panel" id="taskPanel" role="tabpanel" aria-labelledby="taskTab" hidden>
+            <div class="section-heading queue-section-heading">
+              <h2 data-code="TASK">任务队列</h2>
+              <div class="queue-heading-tools">
+                <span id="taskQueueStatus">等待 / 执行中</span>
+                <button type="button" class="queue-collapse-toggle" id="taskCollapseToggle" aria-controls="taskList" aria-expanded="true" title="收起任务列表"><span aria-hidden="true">▾</span></button>
+              </div>
             </div>
-            <div class="operator-id">操作员：指挥席 01</div>
+            <label class="ops-filter">状态<select id="taskFilter"><option value="all">全部任务</option><option value="ACTIVE">执行中</option><option value="PENDING">待分配</option><option value="history">已结束</option></select></label>
+            <div class="task-list" id="taskList"></div>
           </section>
-
-          <section class="rail-section alerts-section">
-            <div class="section-heading"><h2 data-code="ALERT">告警队列</h2><span id="alertActiveLabel">0 条告警</span></div>
+          <section class="ops-tab-panel" id="alertPanel" role="tabpanel" aria-labelledby="alertTab" hidden>
+            <div class="section-heading queue-section-heading">
+              <h2 data-code="ALERT">告警队列</h2>
+              <div class="queue-heading-tools">
+                <span id="alertActiveLabel">0 条告警</span>
+                <button type="button" class="queue-collapse-toggle" id="alertCollapseToggle" aria-controls="alertList" aria-expanded="true" title="收起告警列表"><span aria-hidden="true">▾</span></button>
+              </div>
+            </div>
             <div class="alert-list" id="alertList"></div>
           </section>
 
-          <section class="rail-section tasks-section">
-            <div class="section-heading"><h2 data-code="TASK">任务队列</h2><span>等待 / 执行中</span></div>
-            <div class="task-list" id="taskList"></div>
-            <div class="task-actions">
-              <button class="link-button" id="openTaskModal"><span>＋</span> 注入人工任务</button>
-              <button class="text-button" id="clearSelection">清除选择</button>
-            </div>
-          </section>
         </aside>
 
-        <section class="map-panel">
-          <div class="panel-title-row">
-            <div>
-              <h2 data-code="TACTICAL PICTURE">实时态势地图</h2>
-              <p>GRID 0,0 SW · UNIT m · VIEW 全域</p>
-            </div>
-            <div class="map-controls">
-              <div class="segmented" role="group" aria-label="态势图层">
-                <button class="segment active" data-layer="coverage">覆盖图</button>
-                <button class="segment" data-layer="priority">优先级图</button>
-                <button class="segment" data-layer="passability">通行图</button>
+        <section class="ops-map" aria-labelledby="mapTitle">
+          <div class="map-coordinate-frame" id="mapCoordinateFrame" data-map-mode="3d">
+            <div class="map-axis map-axis-y" id="mapAxisY" aria-label="地图纵向坐标，K 表示千米"></div>
+            <div class="map-stage" id="mapStage">
+              <div id="tacticalMap3d" class="tactical-map-3d" role="application" aria-label="外部视野：滚轮缩放，左键拖动平移，右键拖动旋转；跟随时保持所选单位" hidden></div>
+              <div id="map3dLoading" class="map-3d-loading" role="status" hidden>正在加载外部视野…</div>
+              <canvas id="tacticalMap" aria-label="卫星视野：滚轮缩放，放大后可拖动平移" title="滚轮向上放大、向下缩小 · 放大后按住左键拖动 · ⌖ 回到全域"></canvas>
+              <header class="ops-map-caption">
+                <button type="button" class="ops-tool ops-mobile-control" id="railToggle" aria-controls="operationsRail" aria-expanded="false" aria-label="态势导航" data-tip="态势导航"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-menu"/></svg></button>
+                <div><h2 id="mapTitle" tabindex="-1">态势地图</h2><span id="mapViewLabel">外部视野</span></div>
+              </header>
+              <div class="ops-map-pick" id="mapPickHint" hidden><span id="mapPickText" role="status"></span><button type="button" class="ops-tool" id="cancelMapPick" aria-label="取消地图选择"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-close"/></svg></button></div>
+              <div class="ops-map-tools" role="group" aria-label="地图工具">
+                <button type="button" class="ops-tool active" data-map-mode="3d" aria-label="外部视野" data-tip="外部视野" aria-controls="tacticalMap3d" aria-pressed="true"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-eye"/></svg></button>
+                <button type="button" class="ops-tool" data-map-mode="2d" aria-label="卫星视野" data-tip="卫星视野" aria-controls="tacticalMap" aria-pressed="false"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-globe"/></svg></button>
+                <details class="ops-popover ops-layers" id="mapLayers">
+                  <summary class="ops-tool" aria-label="地图图层" data-tip="地图图层"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-layers"/></svg></summary>
+                  <div class="ops-popover-body ops-layer-options">
+                    <strong>数据底图 <span id="layerName">自然底图</span></strong>
+                    <div class="segmented" role="group" aria-label="态势图层">
+                      <button class="segment" data-layer="coverage">覆盖图</button>
+                      <button class="segment" data-layer="priority">优先级图</button>
+                      <button class="segment" data-layer="passability">通行图</button>
+                    </div>
+                    <strong>地图标绘</strong>
+                    <div class="map-display-toggles" role="group" aria-label="地图标注显示">
+                      <button class="overlay-chip active" data-overlay="routes" title="仅显示尚未走过的规划路线：无人机蓝色，无人车灰绿色"><span class="route-arrows" aria-hidden="true">&gt;&gt;</span>规划路径</button>
+                      <button class="overlay-chip active" data-overlay="platformTracks" title="实际运动实线：无人机浅蓝色，无人车浅灰绿色"><span class="legend-line track-line"></span>单位轨迹</button>
+                      <button class="overlay-chip active" data-overlay="targets"><span class="legend-dot red-dot"></span>目标轨迹</button>
+                      <button class="overlay-chip active" data-overlay="cues"><span class="legend-dot amber-dot"></span>线索热源</button>
+                    </div>
+                  </div>
+                </details>
+                <button type="button" class="ops-tool" id="zoomIn" aria-label="放大地图" data-tip="放大地图" ><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-plus"/></svg></button>
+                <output id="zoomValue" aria-label="地图缩放比例">100%</output>
+                <button type="button" class="ops-tool" id="zoomOut" aria-label="缩小地图" data-tip="缩小地图" ><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-minus"/></svg></button>
+                <button type="button" class="ops-tool" id="fitMap" aria-label="回到全域" data-tip="回到全域" ><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-fit"/></svg></button>
+                <button type="button" class="ops-tool" id="mapTopView" aria-label="三维俯视" data-tip="三维俯视" data-3d-view="top" aria-pressed="false"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-top-view"/></svg></button>
+                <button type="button" class="ops-tool" id="quickFollow" aria-label="跟随所选对象" data-tip="跟随所选对象" data-3d-view="follow" aria-pressed="false" disabled><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-track"/></svg></button>
+                <button type="button" class="ops-tool" id="eventToggle" aria-label="事件记录" data-tip="事件记录" aria-controls="contextPanel" aria-expanded="false"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-events"/></svg></button>
               </div>
-              <div class="zoom-controls" role="group" aria-label="地图缩放">
-                <button class="icon-button" id="zoomOut" title="缩小地图" aria-label="缩小地图">−</button>
-                <output id="zoomValue" aria-live="polite">100%</output>
-                <button class="icon-button" id="zoomIn" title="放大地图" aria-label="放大地图">＋</button>
+              <div class="geo-reference" aria-label="地理信息">
+                <div class="geo-reference-head"><span>沙盘区域</span><strong id="geoAreaName">燕山南麓试验区</strong></div>
+                <div class="geo-reference-grid">
+                  <span>坐标基准</span><strong id="geoDatum">CGCS2000</strong>
+                  <span>地形</span><strong id="geoTerrain">雷区 / 湖泊</strong>
+                </div>
               </div>
-              <button class="icon-button" id="fitMap" title="回到全域" aria-label="回到全域">⌖</button>
+              <div class="north-indicator" aria-label="地图北向"><b>N</b><i></i><span>000°</span></div>
+              <div class="map-toast" id="mapToast" role="status"></div>
             </div>
+            <div class="map-axis map-axis-x" id="mapAxisX" aria-label="地图横向坐标，K 表示千米"></div>
           </div>
-          <div class="map-stage" id="mapStage">
-            <canvas id="tacticalMap" aria-label="战术态势地图"></canvas>
-            <div class="map-toast" id="mapToast" role="status"></div>
-          </div>
-          <section class="unit-selector" aria-labelledby="unitSelectorTitle">
-            <div class="unit-selector-heading">
-              <div><h3 id="unitSelectorTitle" data-code="ASSET">单位选择</h3><span>点选单位查看详情 · 目标和告警可在地图或左侧队列中选择</span></div>
-              <div class="unit-selector-actions">
-                <strong id="unitCount">0 个平台</strong>
-                <button class="icon-button" id="unitPrev" title="查看上一组单位" aria-label="查看上一组单位">‹</button>
-                <button class="icon-button" id="unitNext" title="查看下一组单位" aria-label="查看下一组单位">›</button>
-              </div>
+          <footer class="ops-map-footer">
+            <div class="platform-color-key" aria-label="路径与轨迹颜色"><span class="uav"><i aria-hidden="true"></i>无人机</span><span class="ugv"><i aria-hidden="true"></i>无人车</span></div>
+            <div class="map-scale-row" aria-label="地图比例尺"><span>0</span><i id="mapScaleBar"></i><span id="mapScaleLabel">1 km</span></div>
+            <div class="map-layer-key">
+              <span class="map-layer-status" id="mapStatus">最近扫描情况：</span>
+              <span class="map-layer-legend" id="mapLayerLegend" hidden></span>
             </div>
-            <div class="unit-selector-list" id="unitSelector" aria-label="可选无人平台"></div>
+          </footer>
+          <section class="playback-dock" aria-label="演习回放控制" hidden>
+            <span id="playbackStatus" class="playback-status" role="status"></span>
+            <div id="replayTransport" class="replay-transport">
+              <button type="button" class="ops-tool" id="replayBack" aria-label="后退 10 秒" data-tip="后退 10 秒"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-back"/></svg><span>10</span></button>
+              <input type="range" id="replaySeek" aria-label="回放时刻" min="0" max="0" value="0" step="1" />
+              <button type="button" class="ops-tool" id="replayForward" aria-label="前进 10 秒" data-tip="前进 10 秒"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-forward"/></svg><span>10</span></button>
+              <output id="replayTime">00:00 / 00:00</output>
+            </div>
+            <div id="replayReviewActions" class="replay-actions" role="tabpanel" aria-labelledby="exerciseModeTab">
+              <button type="button" id="replayImport" class="btn btn-quiet">打开回放</button>
+              <button type="button" id="reviewToggle" class="btn btn-quiet" aria-haspopup="dialog">复盘指标</button>
+            </div>
+            <input type="file" id="replayFile" accept=".json,application/json" hidden />
           </section>
         </section>
 
-        <aside class="right-inspector">
-          <section class="process-panel">
-            <div class="section-heading"><h2 data-code="SIM FLOW">仿真流程</h2><span id="processStatus">本地演示</span></div>
-            <div class="process-meta"><span>步数 <strong id="tickValue">0000</strong></span><span>步长 <strong id="dtValue">1.0 秒</strong></span><span>阶段 <strong id="phaseValue">等待</strong></span></div>
-            <div class="process-steps" id="processSteps"></div>
-            <div class="process-log" id="processLog" aria-live="polite"></div>
-          </section>
-          <div class="section-heading"><h2 data-code="DETAIL">对象详情</h2><span>已选择</span></div>
+        <aside class="ops-context" id="contextPanel" aria-labelledby="contextTitle" hidden>
+          <div class="ops-context-head">
+            <h2 id="contextTitle">对象详情</h2>
+            <button type="button" class="icon-button" id="clearSelection" aria-label="关闭右栏"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-close"/></svg></button>
+          </div>
+          <div id="manualPanel" class="ops-manual" hidden>
+            <div id="manualCompose">
+              <div class="ops-tabs manual-tabs" role="tablist" aria-label="人工注入方式">
+                <button type="button" id="manualTaskTab" role="tab" aria-selected="true" aria-controls="taskForm">任务表单</button>
+                <button type="button" id="manualCommandTab" role="tab" aria-selected="false" aria-controls="manualCommand" tabindex="-1">自然语言指令</button>
+              </div>
+              <form id="taskForm" role="tabpanel" aria-labelledby="manualTaskTab">
+                <div class="manual-intro">从地图选择位置或对象，填写参数后提交。</div>
+                <div class="form-grid">
+                  <label>任务类型<select name="taskType"><option value="ArriveTask">到达指定点</option><option value="OccupyTask">区域驻留</option><option value="DiscoverTask">目标发现</option><option value="RescueTask">人员救援</option><option value="InterceptTask">目标拦截</option><option value="MedicalDeliveryTask">医疗投送</option></select></label>
+                  <label>优先级（0 最高）<input name="priority" type="number" min="0" max="100" value="10" /></label>
+                  <label class="wide" id="taskPositionField">目标坐标（米）<input name="targetPos" required autocomplete="off" spellcheck="false" placeholder="例如 8000,2000…" /></label>
+                  <label class="wide" id="taskTargetField" hidden>关联对象<select name="targetId" disabled></select></label>
+                  <label>所需能力<select name="capability"><option value="sensor">感知搜索</option><option value="effector">目标处置</option><option value="medical">医疗投送</option><option value="rescue">人员救援</option><option value="maintenance">设施维修</option></select></label>
+                  <label>平台数量<input name="platforms" type="number" min="1" max="6" value="1" /></label>
+                </div>
+                <button type="button" class="btn btn-quiet manual-pick" id="taskMapPick"><svg class="ops-icon" aria-hidden="true" focusable="false"><use href="#icon-track"/></svg> 从地图选择</button>
+                <div class="dialog-hint">提交后进入任务队列，由调度器分配平台。</div>
+                <p class="manual-feedback" id="taskFormStatus" role="status" hidden></p>
+                <div class="dialog-actions"><button type="submit" class="btn btn-run" id="taskSubmit">提交任务</button></div>
+              </form>
+              <form id="manualCommand" role="tabpanel" aria-labelledby="manualCommandTab" hidden>
+                <label class="manual-input">指令原文
+                  <textarea id="commandInput" name="command" rows="6" maxlength="2000" autocomplete="off" spellcheck="false" required placeholder="输入需要执行的仿真指令…"></textarea>
+                </label>
+                <p class="dialog-hint">发送前可核对原文，处理结果将写入事件记录。</p>
+                <p class="manual-feedback" id="commandStatus" role="status" hidden></p>
+                <div class="dialog-actions"><button type="submit" id="commandSend" class="btn btn-run">核对并发送</button></div>
+              </form>
+            </div>
+            <div id="manualHistory" class="manual-history" hidden></div>
+          </div>
           <div id="inspectorContent" class="inspector-content"></div>
-          <div class="command-dock">
-            <span class="command-prompt">CMD</span>
-            <input id="commandInput" placeholder="输入指令，例如：派一架无人机去东南角核查" aria-label="自然语言指令" />
-            <button id="commandSend" class="command-send" title="下达指令" aria-label="下达指令">下达</button>
+          <div id="llmWorkbench" class="llm-workbench" hidden>
+            <div class="llm-trace-heading">
+              <span>按仿真时间</span>
+              <div class="decision-log-tools">
+                <small id="llmDecisionId">0 条记录</small>
+                <div class="decision-range" role="group" aria-label="决策记录时间范围">
+                  <button type="button" data-decision-range="full">全程</button>
+                  <button type="button" data-decision-range="hour">1 小时</button>
+                  <button type="button" data-decision-range="ten" class="active">10 分钟</button>
+                </div>
+              </div>
+            </div>
+            <div class="llm-trace" id="llmTrace"></div>
           </div>
         </aside>
       </main>
-
-      <footer class="bottom-strip">
-        <section class="timeline-section">
-          <div class="section-heading timeline-heading"><h2 data-code="EVENT LOG">决策时间线</h2><div class="timeline-heading-tools"><span id="timelineRangeLabel">10 分钟内 · 0 条事件</span><div class="timeline-range" role="group" aria-label="时间线范围"><button type="button" data-timeline-range="full">全程</button><button type="button" data-timeline-range="hour">1 小时内</button><button type="button" data-timeline-range="ten" class="active">10 分钟内</button></div></div></div>
-          <div class="timeline-viewport"><div class="timeline" id="timeline"></div></div>
-          <div class="timeline-detail" id="timelineDetail" aria-live="polite"></div>
-        </section>
-        <section class="map-display-section">
-          <div class="section-heading"><h2 data-code="MAP KEY">地图显示</h2><span id="mapStatus">图层：覆盖新鲜度</span></div>
-          <div class="map-display-toggles" role="group" aria-label="地图标注显示">
-            <button class="overlay-chip active" data-overlay="routes"><span class="legend-line blue-line"></span>路径</button>
-            <button class="overlay-chip active" data-overlay="targets"><span class="legend-dot red-dot"></span>目标轨迹</button>
-            <button class="overlay-chip active" data-overlay="cues"><span class="legend-dot amber-dot"></span>线索热源</button>
-          </div>
-          <div class="map-symbol-key" aria-label="地图图例">
-            <div><span class="legend-dot blue-dot"></span>己方平台</div>
-            <div><span class="legend-dot red-dot"></span>已发现目标</div>
-            <div><span class="legend-dot amber-dot"></span>线索热源</div>
-          </div>
-          <div class="map-scale-row" aria-label="地图比例尺"><span>0</span><i id="mapScaleBar"></i><span id="mapScaleLabel">1 km</span></div>
-          <p class="map-display-help">按住地图拖拽平移 · 使用 − / ＋ 缩放</p>
-        </section>
-      </footer>
     </div>
 
-    <dialog id="taskDialog" class="task-dialog">
-      <form method="dialog" id="taskForm">
-          <div class="dialog-heading"><div><p class="eyebrow">人工干预</p><h2>注入人工任务</h2></div><button class="icon-button" value="cancel" title="关闭" aria-label="关闭">×</button></div>
-        <div class="form-grid">
-          <label>任务类型<select name="taskType"><option value="ArriveTask">到达指定点</option><option value="OccupyTask">区域驻留</option><option value="DiscoverTask">目标发现</option><option value="RescueTask">人员救援</option><option value="InterceptTask">目标拦截</option><option value="MedicalDeliveryTask">医疗投送</option></select></label>
-          <label>优先级（0 最高）<input name="priority" type="number" min="0" max="100" value="10" /></label>
-          <label class="wide">目标坐标（米）<input name="targetPos" value="8000,2000" placeholder="例如 8000,2000" /></label>
-          <label>所需能力<select name="capability"><option value="sensor">感知搜索</option><option value="effector">目标处置</option><option value="medical">医疗投送</option><option value="rescue">人员救援</option><option value="maintenance">设施维修</option></select></label>
-          <label>平台数量<input name="platforms" type="number" min="1" max="6" value="1" /></label>
+    <dialog id="reviewDialog" class="task-dialog ops-dialog" aria-labelledby="reviewTitle">
+      <div class="dialog-heading"><h2 id="reviewTitle">演习复盘指标</h2><form method="dialog"><button type="submit" class="icon-button" aria-label="关闭复盘指标">×</button></form></div>
+      <section class="rail-section summary-section">
+        <div class="section-heading"><h2 data-code="SITREP">态势摘要</h2></div>
+        <div class="summary-metric">
+          <div class="metric-label"><span id="coverageLabel">搜索区域覆盖率</span></div>
+          <div class="metric-value data-text" id="coverageValue">0.0%</div>
+          <div class="progress"><span id="coverageBar" style="width: 0%"></span></div>
         </div>
-        <div class="dialog-hint">任务会在下一仿真步进入任务队列，并由调度器自动分配平台。</div>
-        <div class="dialog-actions"><button class="btn btn-quiet" value="cancel">取消</button><button class="btn btn-run" value="default">提交任务</button></div>
+        <div class="summary-row">
+          <div><span class="metric-label" id="handledLabel">救援进度</span><strong class="data-text" id="handledValue">00 / 00</strong></div>
+        </div>
+      </section>
+
+      <section class="rail-section evaluation-section">
+        <div class="section-heading"><h2 data-code="EVAL">任务评价</h2><span id="evaluationScore">得分 --</span></div>
+        <div class="evaluation-goal" id="evaluationGoal">等待评价数据</div>
+        <div class="evaluation-metrics" id="evaluationMetrics"></div>
+      </section>
+
+      <section class="rail-section kpi-section">
+        <div class="section-heading"><h2 data-code="KPI">关键指标</h2></div>
+        <div class="kpi-grid">
+          <div><span>任务完成率</span><strong class="data-text" id="completionValue">0%</strong></div>
+          <div><span>平台利用率</span><strong class="data-text" id="utilizationValue">0%</strong></div>
+          <div><span>平均电量</span><strong class="data-text" id="responseValue">--</strong></div>
+          <div><span>决策记录</span><strong class="data-text" id="replanValue">00</strong></div>
+        </div>
+      </section>
+
+    </dialog>
+
+    <dialog id="diagnosticsDialog" class="task-dialog ops-dialog" aria-labelledby="diagnosticsTitle">
+      <div class="dialog-heading"><h2 id="diagnosticsTitle">调试工具</h2><form method="dialog"><button type="submit" class="icon-button" aria-label="关闭调试工具">×</button></form></div>
+      <details class="ops-debug-section" id="flowDetails">
+        <summary>仿真流程</summary>
+        <div id="flowWorkbench" class="workbench-view">
+          <div class="process-meta"><span>步数 <strong id="tickValue">0000</strong></span><span>步长 <strong id="dtValue">1.0 秒</strong></span><span>阶段 <strong id="phaseValue">等待</strong></span></div>
+          <div class="process-steps" id="processSteps"></div>
+          <div class="process-log" id="processLog"></div>
+        </div>
+      </details>
+      <details class="rail-section navigation-workspace" id="navigationPanel">
+        <summary>导航与测试 <span>展开 / 收起</span></summary>
+        <p class="navigation-hint" id="navigationModeHint">独立测试会保留当前任务进度。</p>
+        <form id="navigationStartForm" class="navigation-form">
+          <label class="wide">测试项目<select id="navigationTestKind"><option value="single">单平台绕障</option><option value="uav-crossing">双无人机交叉</option><option value="ugv-crossing">双无人车交叉</option><option value="mixed-crossing">空地交叉</option></select></label>
+          <label>平台类型<select id="navigationPlatformType"><option value="ugv">无人车</option><option value="uav">无人机</option></select></label>
+          <label class="navigation-check"><input id="navigationStaticObstacle" type="checkbox" checked />加入静态障碍</label>
+          <button class="btn btn-quiet wide" id="navigationStart" type="submit">建立独立测试</button>
+        </form>
+        <button class="btn btn-quiet" id="navigationExit" type="button" hidden>返回原任务</button>
+        <div id="navigationTestCommands" hidden>
+          <p class="navigation-hint">使用顶部的运行、快进和重置控制测试。</p>
+          <form id="navigationGoalForm" class="navigation-form">
+            <label class="wide">测试单位<select id="navigationUnit"></select></label>
+            <label>目标 X / 米<input id="navigationGoalX" type="number" step="any" min="0" required /></label>
+            <label>目标 Y / 米<input id="navigationGoalY" type="number" step="any" min="0" required /></label>
+            <label class="wide">期望速度 / 米每秒<input id="navigationSpeed" type="number" step="0.1" min="0.1" value="5" required /></label>
+            <button class="btn btn-quiet wide" type="submit">设置导航目标</button>
+          </form>
+          <div class="navigation-actions"><button class="btn btn-quiet" type="button" data-navigation-action="target-loss">模拟目标丢失</button><button class="btn btn-danger" type="button" data-navigation-action="stop">停止该单位</button></div>
+          <details class="navigation-obstacles">
+            <summary>临时障碍设置</summary>
+            <div class="navigation-form">
+              <label>中心 X / 米<input id="navigationObstacleX" type="number" step="any" min="0" /></label>
+              <label>中心 Y / 米<input id="navigationObstacleY" type="number" step="any" min="0" /></label>
+              <label>半径 / 米<input id="navigationObstacleRadius" type="number" min="1" max="1000" value="150" /></label>
+              <label>影响范围<select id="navigationObstacleAffects"><option value="both">空地平台</option><option value="uav">仅无人机</option><option value="ugv">仅无人车</option></select></label>
+            </div>
+            <div class="navigation-actions"><button class="btn btn-quiet" type="button" data-obstacle-action="ahead">在前方加入</button><button class="btn btn-quiet" type="button" data-obstacle-action="set">按坐标更新</button><button class="btn btn-quiet" type="button" data-obstacle-action="remove">移除障碍</button></div>
+          </details>
+        </div>
+        <div class="navigation-display-options">
+          <span>调试图层</span>
+          <button type="button" class="overlay-chip" data-overlay="rawPaths">原始路径</button>
+          <button type="button" class="overlay-chip" data-overlay="lookahead">跟踪点</button>
+          <button type="button" class="overlay-chip" data-overlay="safety">安全间距</button>
+          <button type="button" class="overlay-chip active" data-overlay="restrictions">区域约束</button>
+          <label class="navigation-check wide"><input id="behaviorDebugToggle" type="checkbox" />显示目标行为（仿真测试）</label>
+        </div>
+      </details>
+    </dialog>
+
+    <dialog id="replaySaveDialog" class="task-dialog replay-save-dialog" aria-labelledby="replaySaveTitle">
+      <form method="dialog" id="replaySaveForm">
+        <div class="dialog-heading">
+          <div><h2 id="replaySaveTitle">保存回放</h2></div>
+          <button type="button" class="icon-button" data-replay-save-cancel title="关闭" aria-label="关闭">×</button>
+        </div>
+        <label class="replay-filename-label" for="replayFilename">回放名称</label>
+        <div class="replay-filename-field"><input id="replayFilename" name="filename" maxlength="100" required autocomplete="off" /><span>.json</span></div>
+        <p class="dialog-hint">保存已经记录的演习过程，可在“演习回放”中重新打开。</p>
+        <div class="dialog-actions"><button type="button" class="btn btn-quiet" data-replay-save-cancel>取消</button><button type="submit" class="btn btn-run">保存</button></div>
       </form>
     </dialog>
 
-    <dialog id="resetDialog" class="task-dialog confirm-dialog">
+    <dialog id="commandConfirm" class="task-dialog ops-dialog" aria-labelledby="commandConfirmTitle">
+      <form method="dialog">
+        <div class="dialog-heading"><h2 id="commandConfirmTitle">确认发送自然语言指令</h2></div>
+        <p class="dialog-hint">仿真服务将按以下内容处理并执行。</p>
+        <blockquote id="commandPreview"></blockquote>
+        <div class="dialog-actions">
+          <button type="submit" class="btn btn-quiet" value="cancel" autofocus>返回修改</button>
+          <button type="submit" class="btn btn-run" value="send">确认发送</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="resetDialog" class="task-dialog confirm-dialog" aria-labelledby="resetTitle">
       <form method="dialog" id="resetForm">
         <div class="dialog-heading">
-          <div><p class="eyebrow danger-text">结束当前仿真</p><h2>确认重置场景？</h2></div>
+          <div><h2 id="resetTitle">确认重置场景？</h2></div>
           <button class="icon-button" value="cancel" title="关闭" aria-label="关闭">×</button>
         </div>
         <p class="confirm-message">这会停止并清空 <strong id="resetSceneName">当前场景</strong> 的全部仿真进度、任务和事件记录。其他场景不受影响。</p>
@@ -198,6 +385,9 @@
       </form>
     </dialog>
 
-    <script src="app.js"></script>
+    <script src="navigation.js?v=20261109.04"></script>
+    <script src="map-3d.js?v=20261109.10"></script>
+    <script src="exercise-replay.js?v=20261109.02"></script>
+    <script src="app.js?v=20261109.08"></script>
   </body>
 </html>
