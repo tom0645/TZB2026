@@ -1,0 +1,157 @@
+{
+  "units": "m",
+  "up_axis": "+Y",
+  "forward_axis": "+X",
+  "models": {
+    "uav": {
+      "uri": "uav.glb",
+      "source_primitives": 5,
+      "primitives": 1,
+      "triangles": 1816,
+      "vertices": 5448,
+      "bounds": {
+        "min": [
+          -1.1317694187164307,
+          -0.31991857290267944,
+          -1.1317694187164307
+        ],
+        "max": [
+          1.1317694187164307,
+          0.20000000298023224,
+          1.1317694187164307
+        ]
+      },
+      "source_bytes": 133908,
+      "bytes": 219036,
+      "positions_exact": true,
+      "normals_exact": true,
+      "colors_preserved": true,
+      "opaque": true
+    },
+    "ugv": {
+      "uri": "ugv.glb",
+      "source_primitives": 7,
+      "primitives": 1,
+      "triangles": 744,
+      "vertices": 2232,
+      "bounds": {
+        "min": [
+          -1.5399999618530273,
+          0.0,
+          -0.8100000023841858
+        ],
+        "max": [
+          1.5399999618530273,
+          1.9700000286102295,
+          0.8100000023841858
+        ]
+      },
+      "source_bytes": 57492,
+      "bytes": 90376,
+      "positions_exact": true,
+      "normals_exact": true,
+      "colors_preserved": true,
+      "opaque": true
+    },
+    "person": {
+      "uri": "person.glb",
+      "source_primitives": 4,
+      "primitives": 1,
+      "triangles": 312,
+      "vertices": 936,
+      "bounds": {
+        "min": [
+          -0.12999999523162842,
+          0.0,
+          -0.34756702184677124
+        ],
+        "max": [
+          0.2199999988079071,
+          1.8300000429153442,
+          0.3538447916507721
+        ]
+      },
+      "source_bytes": 25060,
+      "bytes": 38544,
+      "positions_exact": true,
+      "normals_exact": true,
+      "colors_preserved": true,
+      "opaque": true
+    },
+    "vehicle": {
+      "uri": "vehicle.glb",
+      "source_primitives": 5,
+      "primitives": 1,
+      "triangles": 440,
+      "vertices": 1320,
+      "bounds": {
+        "min": [
+          -1.840000033378601,
+          0.0,
+          -0.9200000166893005
+        ],
+        "max": [
+          1.840000033378601,
+          1.3600000143051147,
+          0.9200000166893005
+        ]
+      },
+      "source_bytes": 34664,
+      "bytes": 53908,
+      "positions_exact": true,
+      "normals_exact": true,
+      "colors_preserved": true,
+      "opaque": true
+    },
+    "facility": {
+      "uri": "facility.glb",
+      "source_primitives": 5,
+      "primitives": 1,
+      "triangles": 192,
+      "vertices": 576,
+      "bounds": {
+        "min": [
+          -1.2999999523162842,
+          0.0,
+          -1.0499999523162842
+        ],
+        "max": [
+          1.2999999523162842,
+          4.840000152587891,
+          1.0499999523162842
+        ]
+      },
+      "source_bytes": 16788,
+      "bytes": 24144,
+      "positions_exact": true,
+      "normals_exact": true,
+      "colors_preserved": true,
+      "opaque": true
+    },
+    "tree": {
+      "uri": "tree.glb",
+      "source_primitives": 3,
+      "primitives": 1,
+      "triangles": 68,
+      "vertices": 204,
+      "bounds": {
+        "min": [
+          -2.6097404956817627,
+          0.0,
+          -2.6500000953674316
+        ],
+        "max": [
+          2.6097404956817627,
+          12.0,
+          2.490185499191284
+        ]
+      },
+      "source_bytes": 6892,
+      "bytes": 9236,
+      "positions_exact": true,
+      "normals_exact": true,
+      "colors_preserved": true,
+      "opaque": true
+    }
+  }
+}

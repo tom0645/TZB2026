@@ -1,0 +1,60 @@
+/* 导航适配沿用当前终端的边框、字重与有限状态色。 */
+.navigation-workspace > summary, .navigation-obstacles > summary, .inspector-fold > summary {
+  cursor: pointer; color: var(--text-strong); font-size: 12px; font-weight: 600; padding: 7px 0;
+}
+.navigation-workspace > summary span { float: right; font-size: 10px; color: var(--muted); }
+.navigation-workspace { border-top: 1px solid var(--border); }
+.navigation-hint { font-size: 11px; line-height: 1.6; color: var(--muted); margin: 6px 0 10px; }
+.navigation-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 8px 0; }
+.navigation-form label { display: grid; min-width: 0; gap: 4px; font-size: 11px; color: var(--text-strong); }
+.navigation-form .wide, .navigation-display-options .wide { grid-column: 1 / -1; }
+.navigation-form input, .navigation-form select {
+  width: 100%; min-width: 0; height: 30px; padding: 3px 5px; border: 1px solid var(--border-strong);
+  border-radius: 0; color: var(--text-strong); background: #edf4f8; font: inherit; font-size: 12px;
+}
+.navigation-form input:focus, .navigation-form select:focus { outline: 1px solid var(--blue); }
+.navigation-check { display: flex !important; flex-direction: row; align-items: center; gap: 5px; font-size: 11px; }
+.navigation-check input { width: 13px; height: 13px; margin: 0; accent-color: var(--blue); }
+.navigation-actions { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+.navigation-actions .btn { flex: 1 1 auto; padding: 0 7px; font-size: 11px; }
+.navigation-obstacles { border-top: 1px solid var(--border); margin-top: 10px; }
+.navigation-display-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px; }
+.navigation-display-options > span { grid-column: 1 / -1; font-size: 11px; color: var(--muted); }
+.navigation-display-options .overlay-chip { justify-content: center; }
+.navigation-workspace [hidden] { display: none !important; }
+.navigation-workspace .btn:disabled { opacity: .45; cursor: not-allowed; }
+.navigation-status { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0 6px; }
+.navigation-badge { font-size: 11px; padding: 3px 6px; border: 1px solid var(--border-strong); color: var(--blue); background: #e1edf5; }
+.navigation-badge.attention { border-color: #a28149; color: #735822; background: #eee6d5; }
+.navigation-progress { height: 3px; margin: 5px 0 9px; background: #c8d7e1; }
+.navigation-progress i { display: block; height: 100%; background: var(--blue); }
+.inspector-fold { border-top: 1px solid var(--border); margin-top: 8px; }
+.inspector-fold p, .decision-record p, .behavior-detail p { font-size: 11px; line-height: 1.65; margin: 5px 0; overflow-wrap: anywhere; color: var(--text-strong); }
+.decision-record { border-left: 2px solid var(--blue); padding: 3px 8px; background: #e3edf4; }
+.decision-record time { font-size: 10px; color: var(--muted); }
+.decision-record .data-row { grid-template-columns: 70px minmax(0, 1fr); }
+.behavior-detail { padding: 6px 8px; background: #eee7d8; border-left: 2px solid var(--amber); }
+.behavior-detail strong { font-size: 12px; }
+.evaluation-secondary { margin-top: 8px; border-top: 1px solid var(--border); }
+.evaluation-secondary summary { padding: 7px 0; cursor: pointer; font-size: 11px; font-weight: 600; color: var(--blue); }
+.evaluation-row.metric-scalar { padding-bottom: 7px; }
+.evaluation-row.metric-scalar small { margin-top: 3px; }
+.map-display-toggles { flex-wrap: wrap; }
+.map-display-dock .track-line { border-top: 2px solid #6f8795; background: none; }
+.map-display-dock .route-arrows { display: inline-block; color: #6f8795; font: 700 12px Consolas, monospace; letter-spacing: -2px; padding-right: 2px; }
+.platform-color-key { display: flex; align-items: center; gap: 8px; font-size: 10px; white-space: nowrap; }
+.platform-color-key span { display: inline-flex; align-items: center; gap: 4px; }
+.platform-color-key i { width: 10px; border-top: 2px solid currentColor; }
+.platform-color-key .uav { color: #427aa3; }
+.platform-color-key .ugv { color: #5b8763; }
+.data-row span, .object-head > div { min-width: 0; }
+.inspector-content .data-row { align-items: start; }
+.data-row .platform-tags {
+  display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center;
+  gap: 3px 4px; min-width: 0;
+}
+.data-row .platform-tags .task-unit-tag {
+  color: var(--text); font: 600 11px/1.35 var(--mono); white-space: nowrap; overflow-wrap: normal;
+}
+.navigation-workspace :focus-visible, .inspector-fold summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+body[data-session-mode="navigation"] #sessionModeLabel { color: var(--blue); font-weight: 700; }
