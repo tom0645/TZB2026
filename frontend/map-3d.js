@@ -204,7 +204,8 @@
       this.frame = C.Transforms.eastNorthUpToFixedFrame(C.Cartesian3.fromDegrees(0, 0, 0));
       this.inverseFrame = C.Matrix4.inverseTransformation(this.frame, new C.Matrix4());
       this.selectionImages = {
-        selected: markerImage(false, '#71c5e7'), related: markerImage(false, '#91b7d1'),
+        selected: markerImage(false, getComputedStyle(document.documentElement).getPropertyValue('--map-select').trim() || '#71c5e7'),
+        related: markerImage(false, '#91b7d1'),
         high: markerImage(false, '#ff9694'), medium: markerImage(false, '#f1bd72'),
       };
       this.emphasis = new Map();

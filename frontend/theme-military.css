@@ -1,0 +1,345 @@
+/* 现代即时战术主题（参考 Broken Arrow 一类现代军事 RTS 的界面语言）
+ *
+ * 在 operations.css 之后加载，只覆盖色板和外围装饰，不改动布局、交互与业务逻辑。
+ * 恢复冷青指挥舱主题：删除 index.html 中本文件的 <link> 即可。
+ *
+ * 风格要点：深炭灰平面面板、1 px 细线、白色窄体大写标题，敌我只用高饱和的蓝和红；
+ * 不用金色、斜纹、发光和装饰角框。色彩语义不变：蓝＝友方 / 选中，绿＝无人车 / 正常，
+ * 红＝威胁与高危告警，琥珀＝注意状态。
+ */
+:root {
+  --hud-deck: #0b0d10;
+  --hud-panel: #14171c;
+  --hud-raised: #1b1f25;
+  --hud-raised-2: #232830;
+  --hud-line: #2a3039;
+  --hud-line-strong: #434c58;
+  --hud-text: #e6eaef;
+  --hud-text-strong: #ffffff;
+  --hud-muted: #95a0ac;
+  --hud-friendly: #3d8bfd;
+  --hud-friendly-bright: #74aefe;
+  --hud-friendly-deep: #1e4f9c;
+  --hud-friendly-fill: #182a45;
+  --hud-hostile: #ff5c61;
+  --hud-hostile-fill: #c3343b;
+  --hud-attention: #f5b53d;
+  --hud-ugv: #4cc38a;
+  --hud-ink: #ffffff;
+
+  --display-font: "Bahnschrift SemiCondensed", "Bahnschrift", "DIN Condensed", "Avenir Next Condensed",
+    "Roboto Condensed", "Arial Narrow", "Microsoft YaHei UI", "PingFang SC", sans-serif;
+  --body-font: "Microsoft YaHei UI", "PingFang SC", "Segoe UI", system-ui, sans-serif;
+  --mono: "Bahnschrift", "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
+
+  --bg: var(--hud-deck);
+  --top: var(--hud-deck);
+  --panel: var(--hud-panel);
+  --panel-2: var(--hud-raised);
+  --panel-3: var(--hud-raised-2);
+  --border: var(--hud-line);
+  --border-strong: var(--hud-line-strong);
+  --line-soft: var(--hud-line);
+  --text: var(--hud-text);
+  --text-strong: var(--hud-text-strong);
+  --muted: var(--hud-muted);
+  --muted-2: var(--hud-muted);
+  --blue: var(--hud-friendly);
+  --cyan: var(--hud-friendly);
+  --green: var(--hud-ugv);
+  --amber: var(--hud-attention);
+  --red: var(--hud-hostile);
+  --ink: var(--hud-ink);
+  --selected: var(--hud-friendly-fill);
+
+  /* operations.css 外围装饰使用的变量：全部压平 */
+  --console-deck: var(--hud-deck);
+  --console-panel: var(--hud-panel);
+  --console-raised: var(--hud-raised);
+  --console-seam: var(--hud-line);
+  --console-control: var(--hud-line-strong);
+  --console-active: var(--hud-friendly);
+  --console-selected: var(--hud-friendly-fill);
+  --console-glow: transparent;
+  --console-stripes: linear-gradient(transparent, transparent);
+  --console-title: linear-gradient(var(--hud-raised), var(--hud-raised));
+  --console-grid: linear-gradient(transparent, transparent);
+  --console-gold: linear-gradient(var(--hud-friendly), var(--hud-friendly));
+  --console-gold-ink: var(--hud-ink);
+  --console-amber-rim: var(--hud-friendly);
+  --console-amber-surface: var(--hud-friendly-fill);
+  --console-amber-ledge: inset 0 -2px var(--hud-friendly);
+
+  /* 地图选中标记（app.js / map-3d.js 读取） */
+  --map-select: #ffffff;
+}
+
+body { background: var(--hud-deck); }
+::selection { background: var(--hud-friendly); color: #fff; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #3a414b; }
+::-webkit-scrollbar-thumb:hover { background: #56606d; }
+:where(button, summary, input, select, textarea, a):focus-visible { outline-color: var(--hud-friendly-bright); }
+
+/* 统一去掉旧主题的斜纹、发光与装饰角框 */
+.ops-rail::after, .ops-context::after,
+:is(.ops-rail-title, .ops-context-head, .ops-dialog .dialog-heading)::before,
+.ops-rail .unit-tile::after, .ops-rail .alert-card::after,
+.ops-header .brand-mark::before, .ops-header .brand-mark::after { display: none !important; }
+:is(body, .ops-header.topbar, .ops-rail, .ops-context, .ops-map-footer, .ops-manual, .ops-dialog) { background-image: none; }
+.ops-header #simClock, .ops-header .ops-counter strong, .ops-map .playback-dock #replayTime { text-shadow: none; }
+
+/* ---------- 顶栏：左侧控制，中部计时，右侧敌我计数 ---------- */
+.ops-header.topbar {
+  background: linear-gradient(to bottom, #15181d, #0f1115);
+  border-bottom: 1px solid var(--hud-line);
+  box-shadow: 0 1px 0 #00000080;
+}
+.ops-header .brand-block h1 {
+  font: 700 17px/1.1 var(--display-font);
+  letter-spacing: .08em;
+  color: var(--hud-text-strong);
+}
+.ops-header .brand-mark {
+  clip-path: none;
+  border: 1px solid var(--hud-friendly);
+  background: var(--hud-friendly-fill);
+  box-shadow: none;
+  color: var(--hud-friendly-bright);
+}
+.ops-header .brand-mark b { font: 700 14px var(--display-font); color: inherit; }
+.ops-header :is(.brand-block, .ops-run, .ops-health)::after { background: var(--hud-line); }
+
+.ops-tool, .app-shell .btn, .task-dialog .btn, .app-shell .icon-button, .task-dialog .icon-button {
+  border-color: var(--hud-line-strong);
+  background: var(--hud-raised);
+  color: var(--hud-text);
+  font-family: var(--display-font);
+  letter-spacing: .04em;
+}
+.ops-tool:hover, .app-shell .btn:hover, .task-dialog .btn:hover, .app-shell .icon-button:hover, .task-dialog .icon-button:hover {
+  border-color: var(--hud-friendly);
+  background: var(--hud-raised-2);
+  color: var(--hud-text-strong);
+}
+.ops-tool[aria-pressed="true"], .ops-tool[aria-expanded="true"], .ops-popover[open] > .ops-tool {
+  border-color: var(--hud-friendly);
+  background: var(--hud-friendly-fill);
+  color: var(--hud-friendly-bright);
+}
+.ops-header .ops-run > .ops-tool { box-shadow: none; }
+.ops-speed { font: 700 13px var(--display-font); }
+
+#runToggle { color: #fff; }
+.ops-header #runToggle::before {
+  clip-path: none;
+  background: var(--hud-friendly);
+  box-shadow: inset 0 1px #ffffff40, inset 0 -2px #0000002e;
+}
+:is(#runToggle, .ops-context-head #clearSelection):not(:disabled):hover::before { filter: brightness(1.12); }
+.ops-context-head #clearSelection { color: var(--hud-text); }
+.ops-context-head #clearSelection::before {
+  clip-path: none;
+  background: var(--hud-raised-2);
+  box-shadow: inset 0 0 0 1px var(--hud-line-strong);
+}
+
+.ops-header .ops-inject, .ops-manual .btn-run {
+  --keycap: var(--hud-friendly);
+  color: #fff;
+  font: 700 13px var(--display-font);
+  letter-spacing: .1em;
+}
+.ops-header .ops-inject::before, .ops-manual .btn-run::before {
+  clip-path: none;
+  background: var(--keycap);
+  box-shadow: inset 0 1px #ffffff40, inset 0 -2px #0000002e;
+}
+:is(.ops-header .ops-inject, .ops-manual .btn-run):is(:hover, [aria-expanded="true"]) { --keycap: #5a9dff; color: #fff; }
+:is(.ops-header .ops-inject, .ops-manual .btn-run):active { --keycap: #2f78e6; }
+
+.playback-tabs { border-color: var(--hud-line-strong); background: var(--hud-deck); }
+.playback-tabs button, .playback-tabs button + button { font-family: var(--display-font); letter-spacing: .06em; }
+.playback-tabs button.active, .ops-header .playback-tabs button.active {
+  background: var(--hud-friendly-fill);
+  color: var(--hud-text-strong);
+  box-shadow: inset 0 -2px var(--hud-friendly);
+}
+
+.ops-header #connectionStatus { color: var(--hud-muted); }
+.ops-header #simClock {
+  padding: 4px 10px;
+  border: 1px solid var(--hud-line);
+  background: #0d0f13;
+  color: var(--hud-text-strong);
+  font: 700 15px/1.2 var(--display-font);
+  letter-spacing: .06em;
+}
+
+/* 敌我计数块：在线＝蓝，高危告警＝红 */
+.ops-header .ops-counter {
+  --readout-rim: var(--hud-line-strong);
+  --readout-rule: transparent;
+  --readout-fill: linear-gradient(var(--hud-raised), var(--hud-raised));
+  color: var(--hud-text);
+  font-family: var(--display-font);
+  letter-spacing: .04em;
+}
+.ops-header .ops-counter::before, .ops-header .ops-counter::after { clip-path: none; }
+.ops-header .ops-counter strong { font: 700 17px/1.1 var(--display-font); color: #fff; }
+.ops-header #onlineShortcut {
+  --readout-rim: var(--hud-friendly);
+  --readout-fill: linear-gradient(to right, #1f4f97, #173a6e);
+}
+.ops-header #alertShortcut { --readout-rim: #5a2a2e; --readout-fill: linear-gradient(to right, #2a1a1d, #1d1517); }
+.ops-header #alertShortcut:has(.red-text) {
+  --readout-rim: var(--hud-hostile);
+  --readout-rule: transparent;
+  --readout-fill: linear-gradient(to right, #b2303a, #7f2228);
+}
+.ops-header #alertShortcut:has(.red-text) :is(strong, .red-text, .ops-icon) { color: #fff; }
+.ops-header .ops-counter:hover { --readout-rim: var(--hud-friendly-bright); }
+
+.ops-quick-actions .ops-reset { border-color: #6b2f33; background: #22161a; color: var(--hud-hostile); }
+.ops-quick-actions .ops-reset:hover { border-color: var(--hud-hostile); background: #3a1c20; }
+
+/* ---------- 侧栏与详情 ---------- */
+.ops-rail, .ops-context { background: var(--hud-panel); border-color: var(--hud-line); box-shadow: none; }
+:is(.ops-rail-title, .ops-context-head, .ops-dialog .dialog-heading) {
+  background: var(--hud-raised);
+  box-shadow: inset 0 -1px var(--hud-line);
+}
+:is(.ops-rail-title, .ops-context-head, .ops-dialog .dialog-heading)::after {
+  inset: auto auto 0 12px;
+  width: 28px;
+  height: 2px;
+  background: var(--hud-friendly);
+  box-shadow: none;
+}
+:is(.ops-rail-title, .ops-context-head) h2, .ops-dialog .dialog-heading h2, .ops-map-caption h2 {
+  font: 700 16px/1.3 var(--display-font);
+  letter-spacing: .1em;
+  color: var(--hud-text-strong);
+}
+.ops-tabs, .ops-rail > .ops-tabs, .ops-manual .ops-tabs { background: var(--hud-deck); border-bottom-color: var(--hud-line); }
+.ops-tabs button {
+  font: 700 13px var(--display-font);
+  letter-spacing: .14em;
+  color: var(--hud-muted);
+}
+.ops-tabs button:hover { background: var(--hud-raised); color: var(--hud-text); }
+.ops-tabs button[aria-selected="true"],
+:is(.ops-rail > .ops-tabs, .ops-manual .ops-tabs) button[aria-selected="true"] {
+  background: var(--hud-panel);
+  border-bottom-color: var(--hud-friendly);
+  color: var(--hud-text-strong);
+}
+.ops-rail > .ops-tab-panel > .section-heading { background: none; box-shadow: inset 0 -1px var(--hud-line); }
+.ops-tab-panel .section-heading h2 {
+  font: 700 14px var(--display-font);
+  letter-spacing: .1em;
+  color: var(--hud-text-strong);
+}
+.ops-filter select, .ops-rail .ops-filter select,
+.ops-manual :is(input, select, textarea), .task-dialog :is(input, select) {
+  border-color: var(--hud-line-strong);
+  background: #0e1014;
+  color: var(--hud-text);
+}
+.ops-manual :is(input, select, textarea):not(:disabled):hover { border-color: var(--hud-friendly); }
+
+/* 单位卡片：深色卡片＋左侧类型色条，选中时整卡蓝框 */
+.ops-rail .unit-selector-list { gap: 4px; }
+.ops-rail .unit-tile {
+  --asset-rim: var(--hud-line);
+  --asset-type: var(--hud-friendly);
+  --asset-fill: var(--hud-raised);
+  border: 1px solid var(--asset-rim);
+  background: var(--asset-fill);
+  box-shadow: inset 3px 0 var(--asset-type);
+}
+.ops-rail .unit-tile.ugv { --asset-rim: var(--hud-line); --asset-type: var(--hud-ugv); --asset-fill: var(--hud-raised); }
+.ops-rail .unit-tile:is(:hover, .related) { background: var(--hud-raised-2); }
+.ops-rail .unit-tile.selected {
+  --asset-rim: var(--hud-friendly);
+  background: var(--hud-friendly-fill);
+  box-shadow: inset 3px 0 var(--asset-type);
+}
+.ops-rail .unit-tile .unit-identity strong { font: 700 14px var(--display-font); letter-spacing: .06em; }
+.ops-rail .unit-symbol, .ops-rail .ugv .unit-symbol { background: #0e1014; border-color: var(--hud-line); }
+.ops-rail .unit-symbol { color: var(--hud-friendly-bright); }
+.ops-rail .ugv .unit-symbol { color: var(--hud-ugv); }
+.ops-rail .ugv .unit-symbol :is(rect, path)[fill="#edf5f9"] { fill: #0e1014; }
+.ops-rail .unit-tile .ops-unit-status { background: var(--hud-ugv); box-shadow: none; }
+.ops-rail .unit-tile .ops-unit-status[data-status="low"] { background: var(--hud-attention); }
+.ops-rail .unit-tile .ops-unit-status[data-status="offline"] { background: transparent; border-color: var(--hud-muted); }
+
+/* 任务与告警行：选中整行蓝底；告警按等级用通栏色块 */
+.ops-rail :is(.task-row, .alert-card) { border-bottom-color: var(--hud-line); }
+.ops-rail :is(.task-row, .alert-card).selected {
+  background-color: var(--hud-friendly-fill);
+  background-image: none;
+  box-shadow: inset 3px 0 var(--hud-friendly);
+}
+.ops-rail .alert-card { margin-bottom: 3px; border: 0; border-left: 3px solid var(--hud-line-strong); background: var(--hud-raised); }
+.ops-rail .alert-card.high { border-left-color: var(--hud-hostile); background: linear-gradient(to right, #8e2a31d9, #3a1b1fb3); }
+.ops-rail .alert-card.medium { border-left-color: var(--hud-attention); background: linear-gradient(to right, #6b4c1acc, #2a2219b3); }
+.ops-rail .alert-card :is(h3, p) { color: #fff; }
+.ops-rail .alert-card small { color: #ffffffb3; }
+.ops-rail .alert-card.selected { box-shadow: inset 0 0 0 1px var(--hud-friendly-bright); }
+
+.ops-context .llm-step.error { background: #2e1a1d; }
+.ops-context .llm-step.replay-located { border-left-color: var(--hud-friendly); }
+.ops-context .navigation-badge.attention, .ops-context .behavior-detail { background: #33291a; border-color: #8a6a2c; color: var(--hud-attention); }
+.ops-context .decision-range button.active { background: var(--hud-friendly-fill); border-color: var(--hud-friendly); color: var(--hud-text-strong); }
+.manual-feedback { border-left-color: var(--hud-friendly); }
+:is(.app-shell, .task-dialog) .object-card { background: var(--hud-raised); border-color: var(--hud-line); }
+
+/* ---------- 地图区：全幅深底，悬浮工具 ---------- */
+.ops-map { background: var(--hud-deck); }
+.ops-map .map-stage {
+  background:
+    radial-gradient(circle, #ffffff0d 1px, transparent 1.4px) 0 0 / 32px 32px,
+    radial-gradient(ellipse at 50% 42%, #1a1f26, var(--hud-deck) 75%);
+}
+.ops-map-caption {
+  background: #101318e6;
+  border: 1px solid var(--hud-line);
+  box-shadow: inset 2px 0 var(--hud-friendly);
+}
+.ops-map-caption span { color: var(--hud-muted); }
+.ops-map .map-axis { color: var(--hud-muted); }
+.ops-map-tools .ops-tool { background: #14171ce6; }
+.ops-map-tools > .ops-tool:is([aria-pressed="true"], [aria-expanded="true"]),
+.ops-map-tools > .ops-popover:is([open], [data-active="true"]) > .ops-tool,
+.ops-map-tools .ops-layer-options :is(.segment, .overlay-chip).active {
+  color: var(--hud-friendly-bright);
+  border-color: var(--hud-friendly);
+  background: var(--hud-friendly-fill);
+  box-shadow: inset 0 -2px var(--hud-friendly);
+}
+.ops-map-tools #zoomValue { background: #14171ce6; border-color: var(--hud-line); color: var(--hud-text); font: 700 12px/1.3 var(--display-font); }
+.ops-popover-body { background: #14171cf2; border-color: var(--hud-line-strong); box-shadow: 0 8px 24px #0009; }
+.ops-layer-options .map-display-toggles .overlay-chip,
+.ops-layer-options :is(.segment, .overlay-chip) { background: var(--hud-deck); border-color: var(--hud-line-strong); color: var(--hud-muted); font-family: var(--display-font); }
+.ops-layer-options :is(.segment, .overlay-chip):hover { background: var(--hud-raised); color: var(--hud-text); }
+#layerName { color: var(--hud-friendly-bright); }
+.ops-map-footer { background: var(--hud-panel); border-top-color: var(--hud-line); }
+.ops-map-footer .platform-color-key .uav { color: var(--hud-friendly-bright); }
+.ops-map-footer .platform-color-key .ugv { color: var(--hud-ugv); }
+.ops-map .map-toast { background: #14171cf2; border: 1px solid var(--hud-line); border-left: 3px solid var(--hud-friendly); }
+.ops-map .playback-dock { background: var(--hud-panel); border-top-color: var(--hud-line); box-shadow: none; }
+.ops-map .replay-transport input { accent-color: var(--hud-friendly); }
+
+/* 三维视图标注：去白边，使用窄体字 */
+.tactical-crisp-label { border: 0; font-family: var(--display-font); letter-spacing: .03em; box-shadow: 0 1px 3px #0008; }
+.tactical-object-readout { --readout-color: var(--hud-friendly-bright); background: #101318f2; border-color: var(--hud-line-strong); font-family: var(--display-font); }
+.tactical-object-readout.hostile-readout { background: #1a1013f2; border-color: var(--hud-hostile); }
+.tactical-map-3d .cesium-widget-credits { background: transparent; opacity: .55; }
+.tactical-map-3d .cesium-credit-textContainer, .tactical-map-3d .cesium-credit-textContainer a { color: var(--hud-muted) !important; }
+
+/* ---------- 弹窗 ---------- */
+.task-dialog { background: var(--hud-panel); border: 1px solid var(--hud-line-strong); }
+.task-dialog::backdrop { background: #000000b3; }
+.ops-dialog { border-top: 2px solid var(--hud-friendly); }

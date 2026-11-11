@@ -1520,6 +1520,11 @@ function drawUgvMapGlyph(color, selected) {
   ctx.restore();
 }
 
+// 选中标记颜色随界面主题变化，由 CSS 变量 --map-select 提供，首次使用时读取。
+function mapSelectColor() {
+  if (!mapSelectColor.value) mapSelectColor.value = getComputedStyle(document.documentElement).getPropertyValue('--map-select').trim() || '#71c5e7';
+  return mapSelectColor.value;
+}
 function drawPlatformSelection(x, y, mark = 'selected') {
   const radius = mark === 'selected' ? 12 : 10;
   const arm = 3;
@@ -1533,7 +1538,7 @@ function drawPlatformSelection(x, y, mark = 'selected') {
   ctx.moveTo(-radius, radius - arm); ctx.lineTo(-radius, radius); ctx.lineTo(-radius + arm, radius);
   ctx.moveTo(radius, radius - arm); ctx.lineTo(radius, radius); ctx.lineTo(radius - arm, radius);
   ctx.stroke();
-  ctx.strokeStyle = { selected: '#71c5e7', related: '#91b7d1', high: '#ff9694', medium: '#f1bd72' }[mark];
+  ctx.strokeStyle = { selected: mapSelectColor(), related: '#91b7d1', high: '#ff9694', medium: '#f1bd72' }[mark];
   ctx.lineWidth = mark === 'related' ? 1 : 2;
   ctx.stroke();
   ctx.restore();
